@@ -145,7 +145,7 @@ public class AlertObserverFakeTest {
         // Verifica que NO exista ningún warning
         // ni error en consola
 
-        assertTrue(false); //cambio el test para que falle
+        assertFalse(consoleOutput.contains("[WARN]")); //vuelvo a corregir para que ya no falle
         assertFalse(consoleOutput.contains("[ERROR]"));
     }
 }
