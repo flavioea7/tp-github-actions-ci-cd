@@ -1,0 +1,6 @@
+public interface AlertService //CLASE PARA SEPARAR LA DECICISON DE ALERTAR DE LA DE LOGGEAR
+{
+    boolean shouldAlertCost(double cost); // DEVUELVE TRUE SI EL COSTO ES MAYOR AL QUE DEFINO COMO MAX EN EL MAIN
+    boolean shouldAlertETA(int eta); // DEVUELVE TRUE SI EL ETA ES MAYOR AL QUE DEFINO COMO MAX EN EL MAIN
+}
+
