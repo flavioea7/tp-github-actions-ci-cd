@@ -114,3 +114,4 @@ o ejecutando los tests desde IntelliJ.
 
 Durante la ejecución de Mockito pueden aparecer warnings relacionados con ByteBuddy y Java 21.
 Los tests funcionan correctamente igualmente.
+Prueba CI
