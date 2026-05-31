@@ -1,117 +1,114 @@
-# TP - Unit Testing
+# TP GitHub Actions - CI/CD
 
-## Ingeniería de Software
+## Grupo: DemandadeNintendo
 
-### Grupo:DemandadeNintendo
-
----
-
-# Descripción
-
-Este trabajo práctico continúa el TP anterior de Patrones de Diseño.
-Se trabajó sobre el sistema de monitoreo de transporte implementando tests unitarios y realizando una pequeña refactorización del diseño original.
-
-Se utilizaron los siguientes patrones vistos anteriormente:
-
-* Strategy
-* Observer
-* Singleton
-
-Además, en este TP se aplicaron conceptos de:
-
-* Unit Testing
-* Inyección de dependencias
-* Fake objects
-* Mocks con Mockito
+Repositorio desarrollado por el grupo **DemandadeNintendo** para la implementación de un pipeline de Integración Continua (CI) y Entrega Continua (CD) utilizando GitHub Actions y Gradle.
 
 ---
 
-# Refactorización realizada
+## Composite Actions
 
-Se creó la interfaz `AlertService` para separar la lógica de decisión de alertas de la lógica de logging.
+### Build Action
 
-Antes, `AlertObserver` tenía dos responsabilidades:
+Ubicación: `.github/actions/build/action.yml`
 
-* decidir cuándo alertar
-* escribir mensajes en el logger
+Esta action compila el proyecto Java utilizando Gradle y permite reutilizar el proceso de construcción dentro de distintos workflows.
 
-Ahora:
+### Test Action
 
-* `ThresholdAlertService` se encarga de la lógica de umbrales
-* `AlertObserver` solamente actúa cuando recibe una alerta
+Ubicación: `.github/actions/test/action.yml`
 
-También se modificó `AlertObserver` para recibir dependencias por constructor (`AlertService` y `Logger`) y facilitar el testing.
+Esta action ejecuta la suite de pruebas automatizadas del proyecto para verificar que los cambios introducidos no rompan el comportamiento esperado.
 
 ---
 
-# Tests implementados
+## Workflow de Integración Continua (CI)
 
-## 2.1 - Tests de ThresholdAlertService
+Archivo: `.github/workflows/main.yml`
 
-Se realizaron tests unitarios verificando:
+### ¿Cuándo se ejecuta?
 
-* costo por debajo del umbral
-* costo igual al umbral
-* costo por encima del umbral
-* ETA por debajo del umbral
-* ETA por encima del umbral
+Se dispara automáticamente cuando se crea o actualiza un Pull Request dirigido a la rama `main`.
 
----
+### ¿Qué hace?
 
-## 2.2 - Tests con Fake
+1. Ejecuta la acción de Build.
+2. Ejecuta la acción de Test.
+3. Informa el resultado mediante checks visibles en el Pull Request.
 
-Se implementaron:
+### Objetivo
 
-* `AlwaysAlertService`
-* `NeverAlertService`
-
-para probar el comportamiento de `AlertObserver` usando fakes manuales.
+Evitar que cambios con errores de compilación o pruebas fallidas lleguen a la rama principal.
 
 ---
 
-## 2.3 - Tests con Mockito
+## Workflow de Entrega Continua (CD)
 
-Se utilizaron mocks para verificar interacciones con el logger:
+Archivo: `.github/workflows/release.yml`
 
-* `logWarning`
-* `logError`
-* ausencia de llamadas al logger
+### ¿Cuándo se ejecuta?
 
----
+Cuando se crea un tag con formato semántico:
 
-# Tecnologías utilizadas
+- `v1.0.0`
+- `v1.1.0`
+- `v2.0.0`
 
-* Java 21
-* Gradle
-* JUnit 5
-* Mockito
+### ¿Qué hace?
 
----
+1. Compila el proyecto.
+2. Genera el archivo JAR.
+3. Publica automáticamente un Release en GitHub.
+4. Adjunta el artefacto generado al Release.
 
-# Cómo ejecutar el proyecto
+### Objetivo
 
-Desde IntelliJ ejecutar la clase:
-
-```text
-Main.java
-```
+Automatizar la generación y publicación de versiones listas para distribuir.
 
 ---
 
-# Cómo correr los tests
+## Evidencias obtenidas
 
-Desde la terminal:
+Durante el desarrollo se verificó el funcionamiento del pipeline mediante:
 
-```powershell
-.\gradlew test
-```
-
-o ejecutando los tests desde IntelliJ.
+- Pull Requests con ejecución exitosa de Build y Test.
+- Pull Requests con pruebas fallidas para demostrar el bloqueo del pipeline.
+- Corrección posterior de los errores detectados.
+- Publicación automática de un Release asociado al tag `v1.0.0`.
 
 ---
 
-# Nota
+## Diferencia entre CI y CD
 
-Durante la ejecución de Mockito pueden aparecer warnings relacionados con ByteBuddy y Java 21.
-Los tests funcionan correctamente igualmente.
-Prueba CI
+### Continuous Integration (CI)
+
+La Integración Continua valida automáticamente cada cambio mediante compilación y pruebas antes de integrarlo a la rama principal.
+
+En este proyecto está representada por el workflow:
+
+`main.yml`
+
+### Continuous Delivery (CD)
+
+La Entrega Continua automatiza la generación y publicación de versiones listas para distribuir.
+
+En este proyecto está representada por el workflow:
+
+`release.yml`
+
+---
+
+## Tecnologías utilizadas
+
+- Java 21
+- Gradle
+- GitHub Actions
+- JUnit 5
+
+---
+
+## Repositorio
+
+Repositorio del proyecto:
+
+https://github.com/flavioea7/tp-github-actions-ci-cd
